@@ -1,0 +1,24 @@
+{
+  "name": "professor_recommender",
+  "version": "1.0.0",
+  "description": "Rate and review professors",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thewusspuss/ProfessorRecommender.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thewusspuss/ProfessorRecommender/issues"
+  },
+  "homepage": "https://github.com/thewusspuss/ProfessorRecommender#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.4.18",
+    "pug": "^2.0.3"
+  }
+}
