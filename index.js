@@ -16,13 +16,9 @@ app.get('/', (req, res) => {
 	res.render('home');
 })
 
-app.get('/login', (req, res) => {
-	res.render('login');
-})
-app.post('/products', (req, res) => {
-	// form that allows us to add product.
-	res.send();
-})
+// app.get('/login', (req, res) => {
+// 	res.render('login');
+// })
 
 app.get('/faculty', (req, res) => {
 	res.render('faculty');
@@ -30,10 +26,16 @@ app.get('/faculty', (req, res) => {
 app.get('/faculty/:faculty_id', (req, res) => {
 	res.render('faculty');
 })
-app.get('/course', (req, res) => {
-	res.render('sensors');
-})
+// app.get('/course', (req, res) => {
+// 	res.render('sensors');
+// })
 
-app.locals.db.once('open', () => {
-	app.listen(3000);
-})
+
+if (module === require.main) {
+	var PORT = process.env.PORT || 8080;
+	app.locals.db.once('open', () => {
+		app.listen(PORT, () => {
+			console.log(`Server started on port: ${PORT}`);
+		})
+	})
+}
