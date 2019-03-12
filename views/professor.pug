@@ -1,59 +1,61 @@
 
 html(lang='en')
-  head
-    title Rate Your Professor
-    meta(charset='UTF-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    // ===============================================================================================
-    link(rel='icon', type='image/png', href='/images/icons/favicon.ico')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='/vendor/bootstrap/css/bootstrap.min.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='/fonts/font-awesome-4.7.0/css/font-awesome.min.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='/vendor/animate/animate.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='/vendor/css-hamburgers/hamburgers.min.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='/vendor/select2/select2.min.css')
-    // ===============================================================================================
-    link(rel='stylesheet', type='text/css', href='/css/util.css')
-    link(rel='stylesheet', type='text/css', href='/css/main.css')
-    // ===============================================================================================
-  body
-    .bg-contact2(style="background-image: url('images/bg-01.jpg');")
-      .container-contact2
-        .wrap-contact2
-          form.contact2-form.validate-form(action='/professor' method='POST')
-            span.contact2-form-title
-              | Search for your professor
-            .wrap-input2
-              input.input2(type='text', name='name' autofocus)
-              span.focus-input2(data-placeholder='Enter professor name')
-            .wrap-input2
-              input.input2(type='text', name='school')
-              span.focus-input2(data-placeholder='Enter school name')
-            .wrap-input2
-              input.input2(type='text', name='course')
-              span.focus-input2(data-placeholder='Enter course id')
-            .container-contact2-form-btn
-              .wrap-contact2-form-btn
-                .contact2-form-bgbtn
-                button.contact2-form-btn
-                  | Search
-    // ===============================================================================================
-    script(src='vendor/jquery/jquery-3.2.1.min.js')
-    // ===============================================================================================
-    script(src='vendor/bootstrap/js/popper.js')
-    script(src='vendor/bootstrap/js/bootstrap.min.js')
-    // ===============================================================================================
-    script(src='vendor/select2/select2.min.js')
-    // ===============================================================================================
-    script(src='js/main.js')
-    // Global site tag (gtag.js) - Google Analytics
-    script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-23581568-13')
-    script.
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-23581568-13');
+	head
+	title Rate Your Professor
+	meta(charset='UTF-8')
+	meta(name='viewport', content='width=device-width, initial-scale=1')
+	// ===============================================================================================
+	link(rel='icon', type='image/png', href='/images/icons/favicon.ico')
+	// ===============================================================================================
+	link(rel='stylesheet', type='text/css', href='/vendor/bootstrap/css/bootstrap.min.css')
+	// ===============================================================================================
+	link(rel='stylesheet', type='text/css', href='/fonts/font-awesome-4.7.0/css/font-awesome.min.css')
+	// ===============================================================================================
+	link(rel='stylesheet', type='text/css', href='/vendor/animate/animate.css')
+	// ===============================================================================================
+	link(rel='stylesheet', type='text/css', href='/vendor/css-hamburgers/hamburgers.min.css')
+	// ===============================================================================================
+	link(rel='stylesheet', type='text/css', href='/vendor/select2/select2.min.css')
+	// ===============================================================================================
+	link(rel='stylesheet', type='text/css', href='/css/util.css')
+	link(rel='stylesheet', type='text/css', href='/css/main.css')
+	// ===============================================================================================
+	body
+		.bg-contact2(style="background-image: url('images/bg-01.jpg');")
+			.container-contact2
+				.wrap-contact2
+					form.contact2-form.validate-form(action='/professor' method='POST')
+						span.contact2-form-title
+							| Search for your professor
+						.wrap-input2
+							input.input2(type='text', name='name' autofocus)
+							span.focus-input2(data-placeholder='Enter professor name')
+						.wrap-input2
+							input.input2(type='text', name='school')
+							span.focus-input2(data-placeholder='Enter school name')
+						.wrap-input2
+							input.input2(type='text', name='course')
+							span.focus-input2(data-placeholder='Enter course id')
+						.container-contact2-form-btn
+							.wrap-contact2-form-btn
+								.contact2-form-bgbtn
+								button.contact2-form-btn
+									| Search
+					if (message) 
+						span= message
+	// ===============================================================================================
+	script(src='vendor/jquery/jquery-3.2.1.min.js')
+	// ===============================================================================================
+	script(src='vendor/bootstrap/js/popper.js')
+	script(src='vendor/bootstrap/js/bootstrap.min.js')
+	// ===============================================================================================
+	script(src='vendor/select2/select2.min.js')
+	// ===============================================================================================
+	script(src='js/main.js')
+	// Global site tag (gtag.js) - Google Analytics
+	script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-23581568-13')
+	script.
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-23581568-13');

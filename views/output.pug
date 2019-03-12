@@ -1,0 +1,34 @@
+html
+	head
+		title="Professor Rating System"
+		script(src="https://www.google.com/recaptcha/api.js")
+	body
+		#professor
+			p #{prof.name} #{prof.school} 
+			p  overall: #{prof.overall} difficulty : #{prof.difficulty}
+		
+		form#rateForm(method='POST' action=post)
+			select#course(name='course')
+				each course in prof.courses
+					option(value=course._id) #{course.cid}
+			br
+			label Overall:
+			input(type='number' min='0' max='5' step='1' name="overall" id="overall")
+			br
+			label Difficulty:
+			input(type='number' min='0' max='5' id="difficulty" name="difficulty")
+			br
+			textarea#comment(name="comment", cols="30", rows="10")
+			br
+			p !{captcha}
+			button(type="submit") Rate
+			
+		script.
+			function cb(token){
+				console.log('token', token);
+				var input = document.createElement('input');
+				input.setAttribute('type', 'text');
+				input.setAttribute('name', 'g-recaptcha-response');
+				input.setAttribute('value', token);
+				document.getElementById('rateForm').appendChild(input);
+			}

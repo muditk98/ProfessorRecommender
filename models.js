@@ -49,10 +49,13 @@ async function calcAverage(rating) {
 	.exec()
 	.then(data => {
 		console.log(data);
-		mongoose.connection.close();
+		Prof.updateOne({_id: rating.prof}, {'$set': {
+			overall: data[0].avg_overall,
+			difficulty: data[0].avg_difficulty
+		}})
+		.exec()
 	})
 	.catch(err => {
-		mongoose.connection.close();
 		console.log(err);
 	})
 }
