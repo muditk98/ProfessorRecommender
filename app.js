@@ -1,9 +1,9 @@
 const express = require('express');
 const request = require('request');
-
+const config = require('./config')
 var Recaptcha = require('express-recaptcha').Recaptcha;
 //import Recaptcha from 'express-recaptcha'
-var recaptcha = new Recaptcha('6LeCDZcUAAAAAKZZ1P4YO0o_G2Ag-QTgi1pzti4w', '6LeCDZcUAAAAAH9F2KGnGLesk0Z5ppxNUlJ_C8CD');
+var recaptcha = new Recaptcha(config.SITE_KEY, config.SECRET_KEY);
 
 let models = require('./models');
 
