@@ -24,12 +24,12 @@ html(lang='en')
     .bg-contact2(style="background-image: url('images/bg-01.jpg');")
       .container-contact2
         .wrap-contact2
-          form.contact2-form.validate-form
+          form.contact2-form.validate-form(action='/professor' method='POST')
             span.contact2-form-title
               | Search for your professor
             .wrap-input2
-              input.input2(type='text', name='name')
-              span.focus-input2(data-placeholder='Enter faculty name')
+              input.input2(type='text', name='name' autofocus)
+              span.focus-input2(data-placeholder='Enter professor name')
             .wrap-input2
               input.input2(type='text', name='school')
               span.focus-input2(data-placeholder='Enter school name')
