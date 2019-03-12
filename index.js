@@ -60,7 +60,7 @@ app.post('/professor', async (req, res) => {
 })
 app.get('/professor/:professor_id', async (req, res) => {
 	let prof = await models.Prof.findOne({
-		_id: models.mongoose.Schema.Types.ObjectId(req.params.professor_id)
+		_id: req.params.professor_id
 	})
 	if (!prof) {
 		res.send('Coud not find professor with this Id')
@@ -76,7 +76,7 @@ app.get('/professor/:professor_id', async (req, res) => {
 				}
 			})
 
-		res.render('professor');
+		// res.render('professor');
 	}
 })
 // app.get('/course', (req, res) => {

@@ -33,7 +33,7 @@ var RatingSchema = new mongoose.Schema({
 		overall: {type: Number, required: true},
 		difficulty: {type: Number, required: true},
 	},
-	date: Date,
+	date: {type: Date, default: Date.now},
 	comment: String,
 })
 var Rating = new mongoose.model('Rating', RatingSchema);
@@ -46,44 +46,23 @@ exports.Rating = Rating;
 exports.mongoose = mongoose;
 
 /*
-mongoose.connection.once('open', () => {
-	let course = new Course({
-		cid: 'MGT2005',
-		credit: 1,
-		category: 'UE'
-	});
-	course.save()
-	.then( () => {
-			let prof = new Prof({
-				name: 'Gopi',
-				school: 'SCSE',
-				courses: [course._id],
-				score: {
-					overall: 3,
-					difficulty: 3
-				}
-			});
-			prof.save()
-			.then(() => {
-				let rating = new Rating({
-					prof: prof._id,
-					course: course._id,
-					score: {
-						overall: 2.8,
-						difficulty: 3
-					},
-					comment: "This is a comment on the teacher Gopi for course MGT2005"
-				})
-			})
-			.then(() => {
-				mongoose.connection.close();
-			})
-			.catch(err => {
-				console.log(err);
-			})
+mongoose.connection.once('open', async () => {
+	let course = await Course.findOne()
+	let prof = await Prof.findOne()
+	let rating = new Rating({
+		prof: prof._id,
+		course: course._id,
+		score: {
+			overall: 2.3,
+			difficulty: 3.2
+		},
+		comment: 'This is test comment'
 	})
-	.catch(err => {
+	rating.save()
+	.then(() => {
 		mongoose.connection.close();
-		console.log(err);
+	})
+	.catch(() => {
+		mongoose.connection.close();
 	})
 })*/
