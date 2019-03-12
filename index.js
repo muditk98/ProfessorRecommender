@@ -1,5 +1,7 @@
 const express = require('express');
+const request = require('request');
 let models = require('./models');
+
 let app = express();
 app.use(express.urlencoded({
 	extended: true
@@ -72,12 +74,53 @@ app.get('/professor/:professor_id', async (req, res) => {
 					console.error(err);
 					res.send('Server encountered an error')
 				} else {
-					res.send(ratings)
+					// res.send(ratings)
+					res.render('profile', {
+						prof: prof,
+						ratings: ratings
+					})
 				}
 			})
 
 		// res.render('professor');
 	}
+})
+
+app.post('/professor/:professor_id', (req, res) => {
+	if (req.body.captcha === undefine ||
+		req.body.captcha === null ||
+		req.body.captcha === '') {
+		return res.json({"success": false, "msg": "Please select captcha"})
+	}
+	const secret_key = '';
+	const verify_url = `https://google.com/recaptcha/api/siteverify?secret=${secret_key}&` + 
+						`response=${req.body.captcha}&` + 
+						`remote=${req.connection.remoteAddress}`;
+	request(verify_url, (err, res, body) => {
+		body = JSON.parse(body);
+		console.log(body);
+		if (body.success !== undefined && !body.success) {
+			return res.json({"success": false, "msg": "Failed captcha verification"})			
+		}
+
+		let rating = new Rating({
+			prof: models.mongoose.Schema.Types.ObjectId(req.params.professor_id),
+			course: models.mongoose.Schema.Types.ObjectId(req.body.course),
+			score: {
+				overall: req.body.overall,
+				difficulty: req.body.difficulty
+			},
+			comment: req.body.comment
+		})
+		rating.save()
+		.then(() => {
+			res.send('Success')
+		})
+		.catch(() => {
+			res.send('Failed to add rating')
+		})
+		// return res.json({"success": true, "msg": "Captcha passed"})
+	})
 })
 // app.get('/course', (req, res) => {
 // 	res.render('sensors');

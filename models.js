@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/profrate', {
+mongoose.connect('mongodb://localhost/prof_rate', {
 	useNewUrlParser: true,
 });
 mongoose.set('useCreateIndex', true);
@@ -16,10 +16,8 @@ var ProfSchema = new mongoose.Schema({
 	name: {type: String, required: true},
 	school: {type: String, required: true},
 	courses: [{type: mongoose.Schema.Types.ObjectId, ref: 'Course'}],
-	score: {
-		overall: {type: Number, required: true},
-		difficulty: {type: Number, required: true},
-	}
+	overall: {type: Number, default: 0, min: 0, max: 5},
+	difficulty: {type: Number, default: 0, min: 0, max: 5},
 })
 var Prof = new mongoose.model('Prof', ProfSchema);
 
@@ -29,13 +27,40 @@ var Prof = new mongoose.model('Prof', ProfSchema);
 var RatingSchema = new mongoose.Schema({
 	prof: {type: mongoose.Schema.Types.ObjectId, ref: 'Prof'},
 	course: {type: mongoose.Schema.Types.ObjectId, ref: 'Course'},
-	score: {
-		overall: {type: Number, required: true},
-		difficulty: {type: Number, required: true},
-	},
+	overall: {type: Number, required: true, min: 0, max: 5},
+	difficulty: {type: Number, required: true, min: 0, max: 5},
 	date: {type: Date, default: Date.now},
 	comment: String,
 })
+
+async function calcAverage(rating) {
+	Rating.aggregate([
+		{
+			'$match': {prof: rating.prof},
+		},
+		{
+			'$group': {
+				_id: null,
+				avg_overall: {'$avg': '$overall'},
+				avg_difficulty: {'$avg': '$difficulty'}
+			}
+		}
+	])
+	.exec()
+	.then(data => {
+		console.log(data);
+		mongoose.connection.close();
+	})
+	.catch(err => {
+		mongoose.connection.close();
+		console.log(err);
+	})
+}
+
+RatingSchema.post('save', calcAverage);
+RatingSchema.post('delete', calcAverage);
+RatingSchema.post('update', calcAverage);
+
 var Rating = new mongoose.model('Rating', RatingSchema);
 
 // adding exports
@@ -45,24 +70,26 @@ exports.Prof = Prof;
 exports.Rating = Rating;
 exports.mongoose = mongoose;
 
-/*
-mongoose.connection.once('open', async () => {
+
+
+/*mongoose.connection.once('open', async () => {
 	let course = await Course.findOne()
 	let prof = await Prof.findOne()
-	let rating = new Rating({
-		prof: prof._id,
-		course: course._id,
-		score: {
-			overall: 2.3,
-			difficulty: 3.2
-		},
-		comment: 'This is test comment'
-	})
-	rating.save()
-	.then(() => {
-		mongoose.connection.close();
-	})
-	.catch(() => {
-		mongoose.connection.close();
-	})
+	calcAverage({prof: prof._id})
+	// let rating = new Rating({
+	// 	prof: prof._id,
+	// 	course: course._id,
+	// 	score: {
+	// 		overall: 2.3,
+	// 		difficulty: 3.2
+	// 	},
+	// 	comment: 'This is test comment'
+	// })
+	// rating.save()
+	// .then(() => {
+	// 	mongoose.connection.close();
+	// })
+	// .catch(() => {
+	// 	mongoose.connection.close();
+	// })
 })*/
