@@ -1,0 +1,12 @@
+html
+	head
+		title="Professor Rating System"
+		link(rel='stylesheet',href='/stylesheets/style.css')
+	body
+		div
+			each prof in profs
+				a(href=prof.link)
+					p #{prof.name} #{prof.school} 
+					ul
+						each cid in prof.courses.map(course => {return course.cid})
+							li= cid

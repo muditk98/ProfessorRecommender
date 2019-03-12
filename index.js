@@ -12,19 +12,72 @@ app.set('view engine', 'pug');
 app.locals.db = models.mongoose.connection;
 app.locals.db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-app.get('/', (req, res) => {
-	res.render('home');
-})
-
 // app.get('/login', (req, res) => {
 // 	res.render('login');
 // })
 
-app.get('/faculty', (req, res) => {
-	res.render('faculty');
+app.get(['/', '/professor'], (req, res) => {
+	res.render('professor');
 })
-app.get('/faculty/:faculty_id', (req, res) => {
-	res.render('faculty');
+app.post('/professor', async (req, res) => {
+	query = {}
+	if (req.body.course) {
+		let courses = await models.Course.find(
+			{
+				cid: {
+					'$regex': req.body.course || '',
+					'$options': 'i'
+				}
+			},
+			{_id: 1}
+		)
+		query.courses = {'$in': courses.map(course => {return course._id})}
+	}
+	query.name = {
+		'$regex': req.body.name || '',
+		'$options': 'i'
+	}
+	query.school = {
+		'$regex': req.body.school || '',
+		'$options': 'i'
+	}
+	models.Prof.find(query)
+		.populate('courses')
+		.exec((err, profs) => {
+			if (err) {
+				console.error(err);
+				res.send('Server encountered an error')
+			} else {
+				profs = profs.map(prof => {
+					prof.link = '/professor/' + prof._id;
+					return prof;
+				})
+				res.render('link', {
+					profs: profs
+				});
+			}
+		});
+})
+app.get('/professor/:professor_id', async (req, res) => {
+	let prof = await models.Prof.findOne({
+		_id: models.mongoose.Schema.Types.ObjectId(req.params.professor_id)
+	})
+	if (!prof) {
+		res.send('Coud not find professor with this Id')
+	} else {
+		models.Rating.find({prof: prof._id})
+			.populate('course')
+			.exec((err, ratings) => {
+				if (err) {
+					console.error(err);
+					res.send('Server encountered an error')
+				} else {
+					res.send(ratings)
+				}
+			})
+
+		res.render('professor');
+	}
 })
 // app.get('/course', (req, res) => {
 // 	res.render('sensors');

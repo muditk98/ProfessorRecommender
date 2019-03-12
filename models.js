@@ -45,18 +45,18 @@ exports.Prof = Prof;
 exports.Rating = Rating;
 exports.mongoose = mongoose;
 
-
-/*mongoose.connection.once('open', () => {
+/*
+mongoose.connection.once('open', () => {
 	let course = new Course({
-		cid: 'ECM1001',
-		credit: 4,
-		category: 'PC'
+		cid: 'MGT2005',
+		credit: 1,
+		category: 'UE'
 	});
 	course.save()
 	.then( () => {
 			let prof = new Prof({
-				name: 'Sofana Reka',
-				school: 'SENSE',
+				name: 'Gopi',
+				school: 'SCSE',
 				courses: [course._id],
 				score: {
 					overall: 3,
@@ -64,6 +64,17 @@ exports.mongoose = mongoose;
 				}
 			});
 			prof.save()
+			.then(() => {
+				let rating = new Rating({
+					prof: prof._id,
+					course: course._id,
+					score: {
+						overall: 2.8,
+						difficulty: 3
+					},
+					comment: "This is a comment on the teacher Gopi for course MGT2005"
+				})
+			})
 			.then(() => {
 				mongoose.connection.close();
 			})
