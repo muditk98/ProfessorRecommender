@@ -59,32 +59,35 @@ models.mongoose.connection.once('open', async () => {
 				courses: [courses[0]._id, courses[3]._id]
 			}
 		]
-		models.Prof.create(profs)
-		.then(profs => {
-			let ratings = [
-				{
-					prof: profs[0]._id,
-					course: courses[0]._id,
-					overall: 2,
-					difficulty: 5
-				},
-				{
-					prof: profs[1]._id,
-					course: courses[0]._id,
-					overall: 5,
-					difficulty: 2
-				},
-				{
-					prof: profs[1]._id,
-					course: courses[0]._id,
-					overall: 1,
-					difficulty: 1
-				}
-			]
-			models.Rating.create(ratings)
-			.then(() => {
-				models.mongoose.connection.close();
-			})
-		})
+		return models.Prof.create(profs)
+	})
+	.then(profs => {
+		let ratings = [
+			{
+				prof: profs[0]._id,
+				course: courses[0]._id,
+				overall: 2,
+				difficulty: 5
+			},
+			{
+				prof: profs[1]._id,
+				course: courses[0]._id,
+				overall: 5,
+				difficulty: 2
+			},
+			{
+				prof: profs[1]._id,
+				course: courses[0]._id,
+				overall: 1,
+				difficulty: 1
+			}
+		]
+		return models.Rating.create(ratings)
+	})
+	.catch(err => {
+		console.log(err);
+	})
+	.then(() => {
+		models.mongoose.connection.close();
 	})
 })

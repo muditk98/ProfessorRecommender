@@ -8,5 +8,7 @@ html
 				a(href=prof.link)
 					p #{prof.name} #{prof.school} 
 					ul
-						each cid in prof.courses.map(course => {return course.cid})
+						each cid in prof.courses.map(course => course.cid)
 							li= cid
+			if !profs.length
+				p No professors found

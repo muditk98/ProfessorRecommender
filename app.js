@@ -3,6 +3,8 @@ const request = require('request');
 const config = require('./config')
 var Recaptcha = require('express-recaptcha').Recaptcha;
 //import Recaptcha from 'express-recaptcha'
+console.log(config);
+
 var recaptcha = new Recaptcha(config.SITE_KEY, config.SECRET_KEY);
 
 let models = require('./models');
@@ -24,29 +26,29 @@ app.locals.db.on('error', console.error.bind(console, 'MongoDB connection error:
 // 	res.render('login');
 // })
 
-app.get(['/', '/professor'], (req, res) => {
-	res.render('professor');
+app.get('/', (req, res) => {
+	res.render('home');
 })
-app.post('/professor', async (req, res) => {
+app.get('/professors', async (req, res) => {
 	query = {}
-	if (req.body.course) {
+	if (req.query.course) {
 		let courses = await models.Course.find(
 			{
-				cid: {
-					'$regex': req.body.course || '',
+				cid: { // select all courses that match given course query
+					'$regex': req.query.course || '',
 					'$options': 'i'
 				}
 			},
-			{_id: 1}
+			{_id: 1} // only return _id
 		)
-		query.courses = {'$in': courses.map(course => {return course._id})}
+		query.courses = {'$in': courses.map(course => course._id)}
 	}
 	query.name = {
-		'$regex': req.body.name || '',
+		'$regex': req.query.name || '',
 		'$options': 'i'
 	}
 	query.school = {
-		'$regex': req.body.school || '',
+		'$regex': req.query.school || '',
 		'$options': 'i'
 	}
 	models.Prof.find(query)
@@ -57,7 +59,7 @@ app.post('/professor', async (req, res) => {
 				res.send('Server encountered an error')
 			} else {
 				profs = profs.map(prof => {
-					prof.link = '/professor/' + prof._id;
+					prof.link = '/professors/' + prof._id;
 					return prof;
 				})
 				res.render('link', {
@@ -66,7 +68,7 @@ app.post('/professor', async (req, res) => {
 			}
 		});
 })
-app.get('/professor/:professor_id', recaptcha.middleware.render, async (req, res) => {
+app.get('/professors/:professor_id', recaptcha.middleware.render, async (req, res) => {
 	models.Prof.findOne({
 		_id: req.params.professor_id
 	}).populate('courses')
@@ -77,6 +79,7 @@ app.get('/professor/:professor_id', recaptcha.middleware.render, async (req, res
 			models.Rating.find({
 					prof: prof._id
 				})
+				.sort({'date': 'desc'})
 				.populate('course')
 				.exec((err, ratings) => {
 					if (err) {
@@ -101,7 +104,7 @@ app.get('/professor/:professor_id', recaptcha.middleware.render, async (req, res
 	})
 })
 
-app.post('/professor/:professor_id', recaptcha.middleware.verify, (req, res) => {
+app.post('/professors/:professor_id', recaptcha.middleware.verify, (req, res) => {
 	
 	console.log(req.body);
 	
@@ -109,25 +112,28 @@ app.post('/professor/:professor_id', recaptcha.middleware.verify, (req, res) => 
 		let rating = new models.Rating({
 			prof: req.params.professor_id,
 			course: req.body.course,
-			overall: req.body.overall,
-			difficulty: req.body.difficulty,
+			overall: req.body.overall || 0,
+			difficulty: req.body.difficulty || 0,
 			comment: req.body.comment
 		})
 		console.log(rating);
 
 		rating.save()
 			.then(() => {
-				res.render('professor', {
+				res.render('home', {
 					message: 'Sucessfully rated'
 				})
 			})
 			.catch(err => {
-				res.render('professor', {
+				res.render('home', {
 					message: 'Failure'
 				})
 			})
 	} else {
 		// error code
+		res.render('home', {
+			message: 'Rating not posted as captcha was not verified'
+		})
 	}
 	// return res.json({"success": true, "msg": "Captcha passed"})
 })

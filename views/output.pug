@@ -2,12 +2,16 @@ html
 	head
 		title="Professor Rating System"
 		script(src="https://www.google.com/recaptcha/api.js")
+		link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+		link(rel='stylesheet', type='text/css', href='/fonts/font-awesome-4.7.0/css/font-awesome.min.css')
+
 	body
 		#professor
 			p #{prof.name} #{prof.school} 
-			p  overall: #{prof.overall} difficulty : #{prof.difficulty}
+			p  Overall Score: #{prof.overall.toFixed(2)} 
+			p Difficulty: #{prof.difficulty.toFixed(2)}
 		
-		form#rateForm(method='POST' action=post)
+		form#rateForm.contact2-form.validate-form(method='POST' action=post)
 			select#course(name='course')
 				each course in prof.courses
 					option(value=course._id) #{course.cid}
@@ -21,8 +25,25 @@ html
 			textarea#comment(name="comment", cols="30", rows="10")
 			br
 			p !{captcha}
-			button(type="submit") Rate
-			
+			button#formSubmitButton(type="submit") Rate
+		table.ratings
+			thead
+				th Date
+				th Course
+				th Overall Score
+				th Difficulty
+				th Comments
+			tbody
+				each rating in ratings
+					if rating.comment
+						tr
+							td= rating.date.toLocaleString()
+							td= rating.course.cid
+							td= rating.overall
+							td= rating.difficulty
+							td= rating.comment 
+
+
 		script.
 			function cb(token){
 				console.log('token', token);
@@ -31,4 +52,6 @@ html
 				input.setAttribute('name', 'g-recaptcha-response');
 				input.setAttribute('value', token);
 				document.getElementById('rateForm').appendChild(input);
+				//- document.getElementById('formSubmitButton').disabled = 'false'
+				//- alert('asdf')
 			}
