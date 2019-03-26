@@ -1,14 +1,24 @@
 html
 	head
 		title="Professor Rating System"
-		link(rel='stylesheet',href='/stylesheets/style.css')
-	body
-		div
+		link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+		script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+	body.bg-light
+		nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+			ul.navbar-nav
+				li.nav-item
+					a.nav-link(href="/") Home
+		.container
 			each prof in profs
-				a(href=prof.link)
-					p #{prof.name} #{prof.school} 
-					ul
-						each cid in prof.courses.map(course => course.cid)
-							li= cid
-			if !profs.length
-				p No professors found
+				.card.bg-light(style="width:20em; margin: 1em;")
+					.card-body
+						h4.card-title #{prof.name}
+						p.card-text #{prof.school}
+						ul.list-group.list-group-flush
+							each cid in prof.courses.map(course => course.cid)
+								li.list-group-item.bg-light= cid
+						a.btn.btn-primary.stretched-link(href=prof.link) View
+		if !profs.length
+			.jumbotron
+				h2 No professors found
