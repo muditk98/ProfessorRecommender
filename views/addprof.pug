@@ -1,0 +1,45 @@
+html
+	head
+		title="Professor Rating System"
+		script(src="https://www.google.com/recaptcha/api.js")
+		link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+		link(rel='stylesheet', type='text/css', href='/fonts/font-awesome-4.7.0/css/font-awesome.min.css')
+
+		link(rel='icon', type='image/png', href='/images/icons/favicon.ico')
+		link(rel='stylesheet', type='text/css', href='/vendor/bootstrap/css/bootstrap.min.css')
+		link(rel='stylesheet', type='text/css', href='/fonts/font-awesome-4.7.0/css/font-awesome.min.css')
+		link(rel='stylesheet', type='text/css', href='/vendor/animate/animate.css')
+		link(rel='stylesheet', type='text/css', href='/vendor/css-hamburgers/hamburgers.min.css')
+		link(rel='stylesheet', type='text/css', href='/vendor/select2/select2.min.css')
+		link(rel='stylesheet', type='text/css', href='/css/util.css')
+		link(rel='stylesheet', type='text/css', href='/css/main.css')
+
+	body.bg-light
+		nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
+			ul.navbar-nav
+				li.nav-item
+					a.nav-link.active(href="/") Home
+				li.nav-item.active
+					a.nav-link.disabled(href="/addProfessor") Add Professor
+		.jumbotron.text-justify
+			h1 Add a professor
+		.container.bg-light(style="width:60%; margin-bottom:10em;")
+			form#addForm(method='POST' action='/professors')
+				.form-group
+					label(for="name") Name:
+					input.form-control(type='text' name="name" id="name" placeholder="Enter Name" required)
+				.form-group
+					label(for="school") School:
+					input.form-control(type='text' name="school" id="school" placeholder="Enter School" required)
+				.form-group
+					label(for="course1") Course 1:
+					input.form-control(type='text' name="course1" id="course1" placeholder="Enter Course 1")
+				.form-group
+					label(for="course2") Course 2:
+					input.form-control(type='text' name="course2" id="course2" placeholder="Enter Course 2")
+				.form-group
+					label(for="course3") Course 3:
+					input.form-control(type='text' name="course3" id="course3" placeholder="Enter Course 3")
+				//- .form-group
+					p !{captcha}
+				button.btn.btn-primary#formSubmitButton(type="submit") Rate

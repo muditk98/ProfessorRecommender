@@ -68,6 +68,9 @@ app.get('/professors', async (req, res) => {
 			}
 		});
 })
+
+
+
 app.get('/professors/:professor_id', recaptcha.middleware.render, async (req, res) => {
 	models.Prof.findOne({
 		_id: req.params.professor_id
@@ -137,6 +140,49 @@ app.post('/professors/:professor_id', recaptcha.middleware.verify, (req, res) =>
 	}
 	// return res.json({"success": true, "msg": "Captcha passed"})
 })
+
+app.get('/addProfessor', (req, res) => {
+	res.render('addprof');
+})
+
+app.post('/professors', (req, res) => {
+	if (!req.body.name || !req.body.school) {
+		res.status(400).send('Form name and school cannot be empty')
+		return;
+	}
+	let prof = {
+		name: req.body.name,
+		school: req.body.school,
+		courses: []
+	}
+	query_courses = []
+	if (req.body.course1) {
+		query_courses.push(req.body.course1)
+	}
+	if (req.body.course2) {
+		query_courses.push(req.body.course2)
+	}
+	if (req.body.course3) {
+		query_courses.push(req.body.course3)
+	}
+	console.log(query_courses);
+	models.Course.find({
+		cid: {'$in': query_courses}
+	})
+		.then(courses => {
+			console.log(courses);
+			prof.courses = courses.map(course => course._id)
+			return new models.Prof(prof).save()
+		})
+		.then(prof => {
+			res.redirect(`/professors/${prof._id}`)
+		})
+		.catch(err => {
+			console.log(err);
+			res.send('Whoops');
+		})
+})
+
 
 if (module === require.main) {
 	var PORT = process.env.PORT || 8080;

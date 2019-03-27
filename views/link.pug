@@ -4,21 +4,36 @@ html
 		link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
 		script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+
+		link(rel='icon', type='image/png', href='/images/icons/favicon.ico')
+		link(rel='stylesheet', type='text/css', href='/vendor/bootstrap/css/bootstrap.min.css')
+		link(rel='stylesheet', type='text/css', href='/fonts/font-awesome-4.7.0/css/font-awesome.min.css')
+		link(rel='stylesheet', type='text/css', href='/vendor/animate/animate.css')
+		link(rel='stylesheet', type='text/css', href='/vendor/css-hamburgers/hamburgers.min.css')
+		link(rel='stylesheet', type='text/css', href='/vendor/select2/select2.min.css')
+		link(rel='stylesheet', type='text/css', href='/css/util.css')
+		link(rel='stylesheet', type='text/css', href='/css/main.css')
+
+
 	body.bg-light
 		nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
 			ul.navbar-nav
 				li.nav-item
-					a.nav-link(href="/") Home
-		.container
+					a.nav-link.active(href="/") Home
+				li.nav-item
+					a.nav-link.active(href="/addProfessor") Add Professor
+		.container.row
 			each prof in profs
 				.card.bg-light(style="width:20em; margin: 1em;")
 					.card-body
 						h4.card-title #{prof.name}
 						p.card-text #{prof.school}
-						ul.list-group.list-group-flush
+						ul.list-group.list-group-flush.text-center
 							each cid in prof.courses.map(course => course.cid)
 								li.list-group-item.bg-light= cid
-						a.btn.btn-primary.stretched-link(href=prof.link) View
+						a.stretched-link(href=prof.link)
+					.card-footer.text-center
+						small= prof._id
 		if !profs.length
 			.jumbotron
 				h2 No professors found

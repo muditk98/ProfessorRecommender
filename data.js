@@ -28,7 +28,7 @@ let courses = [
 	}
 ]
 
-models.mongoose.connection.once('open', async () => {
+models.mongoose.connection.once('open', () => {
 	models.Course.create(courses)
 	.then(courses => {
 		let profs = [{
@@ -84,10 +84,15 @@ models.mongoose.connection.once('open', async () => {
 		]
 		return models.Rating.create(ratings)
 	})
+	.then(ratings => {
+		console.log('Done');
+	})
 	.catch(err => {
 		console.log(err);
 	})
 	.then(() => {
-		models.mongoose.connection.close();
+		setTimeout(() => {
+			models.mongoose.connection.close();
+		}, 0);
 	})
 })
