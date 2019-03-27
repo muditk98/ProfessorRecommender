@@ -1,10 +1,11 @@
 const express = require('express');
-const request = require('request');
+// const request = require('request');
 const config = require('./config.json')
+const axios = require('axios')
 var Recaptcha = require('express-recaptcha').Recaptcha;
 //import Recaptcha from 'express-recaptcha'
 console.log(config);
-
+const NLP_URL = `https://language.googleapis.com/v1/documents:analyzeSentiment?fields=documentSentiment&key=${config.NLP_KEY}`
 var recaptcha = new Recaptcha(config.SITE_KEY, config.SECRET_KEY);
 
 let models = require('./models');
@@ -117,21 +118,52 @@ app.post('/professors/:professor_id', recaptcha.middleware.verify, (req, res) =>
 			course: req.body.course,
 			overall: req.body.overall || 0,
 			difficulty: req.body.difficulty || 0,
-			comment: req.body.comment
+			comment: req.body.comment,
+			sentiment: 0
 		})
-		console.log(rating);
-
-		rating.save()
-			.then(() => {
-				res.render('home', {
-					message: 'Sucessfully rated'
+		if (req.body.comment) {
+			axios.post(NLP_URL, 
+				{
+					document: {
+						content: req.body.comment,
+						type: 'PLAIN_TEXT'
+					}
 				})
-			})
-			.catch(err => {
-				res.render('home', {
-					message: 'Failure'
+				.then(nlp_response => {
+					console.log(nlp_response.data);
+					rating.sentiment = nlp_response.data.documentSentiment.score
+					console.log(`rating.sentiment: ${rating.sentiment}`);
+					
+					return rating.save()
 				})
-			})
+				.catch(err => {
+					console.log('Failed to nlp');
+					console.log(err.message);
+				})
+				.then(() => {
+						res.render('home', {
+							message: 'Sucessfully rated'
+						})
+					})
+					.catch(err => {
+						res.render('home', {
+							message: 'Failure'
+						})
+					})
+		} else {
+			rating.save()
+				.then(() => {
+						res.render('home', {
+							message: 'Sucessfully rated'
+						})
+					})
+					.catch(err => {
+						res.render('home', {
+							message: 'Failure'
+						})
+					})
+		}
+		console.log(rating);		
 	} else {
 		// error code
 		res.render('home', {

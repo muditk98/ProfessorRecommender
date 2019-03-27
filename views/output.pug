@@ -36,6 +36,9 @@ html
 				.col 
 					h6 Difficulty: 
 					h2 #{prof.difficulty.toFixed(2)}			
+				.col 
+					h6 Sentiment: 
+					h2 #{prof.sentiment.toFixed(2)}			
 		.container(style="width:80%; margin-bottom:10em;")
 			p
 			form#rateForm(method='POST' action=post)
@@ -63,6 +66,7 @@ html
 						th Course
 						th Overall Score
 						th Difficulty
+						th Sentiment
 						th Comments
 					tbody
 						each rating in ratings
@@ -72,6 +76,7 @@ html
 									td= rating.course.cid
 									td= rating.overall
 									td= rating.difficulty
+									td= rating.sentiment
 									td= rating.comment 
 
 

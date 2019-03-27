@@ -19,6 +19,7 @@ var ProfSchema = new mongoose.Schema({
 	courses: [{type: mongoose.Schema.Types.ObjectId, ref: 'Course'}],
 	overall: {type: Number, default: 0, min: 0, max: 5},
 	difficulty: {type: Number, default: 0, min: 0, max: 5},
+	sentiment: {type: Number, default: 0}
 })
 var Prof = new mongoose.model('Prof', ProfSchema);
 
@@ -30,11 +31,12 @@ var RatingSchema = new mongoose.Schema({
 	course: {type: mongoose.Schema.Types.ObjectId, ref: 'Course'},
 	overall: {type: Number, required: true, min: 0, max: 5},
 	difficulty: {type: Number, required: true, min: 0, max: 5},
+	sentiment: { type: Number, default: 0 },
 	date: {type: Date, default: Date.now},
-	comment: String,
+	comment: {type: String, default: ''},
 })
 
-async function calcAverage(rating) {
+function calcAverage(rating) {
 	Rating.aggregate([
 		{
 			'$match': {prof: rating.prof},
@@ -43,7 +45,21 @@ async function calcAverage(rating) {
 			'$group': {
 				_id: null,
 				avg_overall: {'$avg': '$overall'},
-				avg_difficulty: {'$avg': '$difficulty'}
+				avg_difficulty: {'$avg': '$difficulty'},
+				sum_sentiment: {'$sum': '$sentiment'},
+				comment_count: {
+					'$sum': {
+						"$switch": {
+							"branches": [{
+								"case": {
+									"$ne": ["$comment", '']
+								},
+								"then": 1
+							}],
+							"default": 0
+						}
+					}
+				}
 			}
 		}
 	])
@@ -52,7 +68,8 @@ async function calcAverage(rating) {
 		console.log(data);
 		Prof.updateOne({_id: rating.prof}, {'$set': {
 			overall: data[0].avg_overall,
-			difficulty: data[0].avg_difficulty
+			difficulty: data[0].avg_difficulty,
+			sentiment: (data[0].sum_sentiment/data[0].comment_count) || 0
 		}})
 		.exec()
 	})

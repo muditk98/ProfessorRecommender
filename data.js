@@ -29,7 +29,11 @@ let courses = [
 ]
 
 models.mongoose.connection.once('open', () => {
-	models.Course.create(courses)
+	models.mongoose.connection.db.dropDatabase()
+	.then(result => {
+		console.log(result);
+		return models.Course.create(courses)
+	})
 	.then(courses => {
 		let profs = [{
 				name: 'Robin',
@@ -67,19 +71,22 @@ models.mongoose.connection.once('open', () => {
 				prof: profs[0]._id,
 				course: courses[0]._id,
 				overall: 2,
-				difficulty: 5
+				difficulty: 5,
+				sentiment: 0
 			},
 			{
 				prof: profs[1]._id,
 				course: courses[0]._id,
 				overall: 5,
-				difficulty: 2
+				difficulty: 2,
+				sentiment: 0
 			},
 			{
 				prof: profs[1]._id,
 				course: courses[0]._id,
 				overall: 1,
-				difficulty: 1
+				difficulty: 1,
+				sentiment: 0
 			}
 		]
 		return models.Rating.create(ratings)
@@ -93,6 +100,6 @@ models.mongoose.connection.once('open', () => {
 	.then(() => {
 		setTimeout(() => {
 			models.mongoose.connection.close();
-		}, 0);
+		}, 2);
 	})
 })
