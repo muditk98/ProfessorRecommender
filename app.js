@@ -1,6 +1,6 @@
 const express = require('express');
 const request = require('request');
-const config = require('./config')
+const config = require('./config.json')
 var Recaptcha = require('express-recaptcha').Recaptcha;
 //import Recaptcha from 'express-recaptcha'
 console.log(config);

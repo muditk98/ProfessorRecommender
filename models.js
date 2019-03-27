@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/prof_rate', {
+const config = require('./config.json')
+mongoose.connect(config.MONGO_URI, {
 	useNewUrlParser: true,
 });
 mongoose.set('useCreateIndex', true);
