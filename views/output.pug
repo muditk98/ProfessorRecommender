@@ -14,7 +14,6 @@ html
 		link(rel='stylesheet', type='text/css', href='/css/util.css')
 		link(rel='stylesheet', type='text/css', href='/css/main.css')
 
-
 	body.bg-light
 		nav.navbar.navbar-expand-sm.bg-dark.navbar-dark
 			ul.navbar-nav
@@ -22,7 +21,7 @@ html
 					a.nav-link.active(href="/") Home
 				li.nav-item
 					a.nav-link.active(href="/") Add Professor
-		.jumbotron.text-justify
+		.jumbotron.text-justify(style="background-color: " + color + ";")
 			.row
 				.col 
 					h6 Name:
@@ -39,6 +38,9 @@ html
 				.col 
 					h6 Sentiment: 
 					h2 #{prof.sentiment.toFixed(2)}			
+				//- .col 
+					h6 Color: 
+					h2 #{color}			
 		.container(style="width:80%; margin-bottom:10em;")
 			p
 			form#rateForm(method='POST' action=post)
